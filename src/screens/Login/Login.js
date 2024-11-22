@@ -11,76 +11,80 @@ const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false); // To show a loading state if needed
+  const [loading, setLoading] = useState(false);
 
-  const LoginPage = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password.');
-      return;
+  const LoginPage =() => {
+    const data = {
+      email: email,
+      password: password
     }
+
+    instance.post('/login', data)
+
+    .then(async(res)=>{
+      // console.log(res.data.token);
+      console.log('login success');
+      const token= res.data.token;
+     await AsyncStorage.setItem('acpt-student',token);
+      
+     setTimeout(() => {
+      navigation.navigate('BottomTab');
+  }, 1000);
+      
+    })
+    .catch((err)=>{
+      // console.log(err);
+      console.log('login faild ');
+      
+      
+    })
   
-    setLoading(true);
-  
-    try {
-      const res = await instance.post('/login', { email, password });
-      const token = res.data.token;
-  
-      await AsyncStorage.setItem('acpt-student', token);
-      console.log('Login successful');
-  
-      // Update login state by re-checking token in AsyncStorage
-      setLogin(true); // Pass setLogin as a prop from App.js
-    } catch (err) {
-      console.error('Login error:', err);
-      Alert.alert('Login Failed', 'Invalid email or password. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+
+      
   };
-  
 
-  return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={styles.title}>Login</Text>
 
-      <TextInput
-        label="Email"
-        mode="outlined"
-        style={styles.input}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
-      />
+return (
+  <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <Text style={styles.title}>Login</Text>
 
-      <TextInput
-        label="Password"
-        mode="outlined"
-        style={styles.input}
-        secureTextEntry
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-      />
+    <TextInput
+      label="Email"
+      mode="outlined"
+      style={styles.input}
+      keyboardType="email-address"
+      autoCapitalize="none"
+      onChangeText={(text) => setEmail(text)}
+      
+    />
 
-      <Button
-        mode="contained"
-        style={styles.loginButton}
-        labelStyle={styles.loginButtonLabel}
-        onPress={LoginPage}
-        loading={loading}
-        disabled={loading}
-      >
-        Login
-      </Button>
+    <TextInput
+      label="Password"
+      mode="outlined"
+      style={styles.input}
+      secureTextEntry
+      onChangeText={(text) => setPassword(text)}
+      
+    />
 
-      <View style={styles.registerSection}>
-        <Text style={styles.registerText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.registerLink}> Register here</Text>
-        </TouchableOpacity>
-      </View>
+    <Button
+      mode="contained"
+      style={styles.loginButton}
+      labelStyle={styles.loginButtonLabel}
+      onPress={LoginPage}
+      
+    >
+      Login
+    </Button>
+
+    <View style={styles.registerSection}>
+      <Text style={styles.registerText}>Don't have an account?</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.registerLink}> Register here</Text>
+      </TouchableOpacity>
     </View>
-  );
+  </View>
+);
 };
 
 const styles = StyleSheet.create({

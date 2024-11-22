@@ -7,18 +7,16 @@ import instance from '../../service/Axios/Axios';
 
 export default function Account() {
   const [visible, setVisible] = useState(false);
-  const navigation = useNavigation(); // Use navigation hook
+  const navigation = useNavigation();
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
   const logout = async () => {
     try {
-      await instance.get('/logout'); // Call API to log out
-      await AsyncStorage.removeItem('acpt-student'); // Remove token from storage
-     
-            navigation.replace('Login'); // Navigate to login page
-         
+      await AsyncStorage.removeItem('acpt-student');
+      console.log('Logged out successfully');
+      navigation.navigate('Login');
     } catch (error) {
       console.error('Failed to log out', error);
       Alert.alert('Error', 'Failed to log out. Please try again.');
