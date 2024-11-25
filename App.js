@@ -30,17 +30,14 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {!login ? (
-          <>
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
-            <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>
-          </>
-        ) : (
-          <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }}
-          />
-        )}
-      </Stack.Navigator>
+       <Stack.Navigator>
+                {!login && (
+                    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+                )}
+
+                <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
+                <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+            </Stack.Navigator>
     </NavigationContainer>
   );
 }
